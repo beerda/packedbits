@@ -1,0 +1,5 @@
+add_test([=[BitSetTest.BasicOperations]=]  /home/runner/work/packedbits/packedbits/_codeql_build_dir/apps/unittest [==[--gtest_filter=BitSetTest.BasicOperations]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[BitSetTest.BasicOperations]=]  PROPERTIES WORKING_DIRECTORY /home/runner/work/packedbits/packedbits/_codeql_build_dir/apps SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==])
+add_test([=[BitSetTest.BitwiseAND]=]  /home/runner/work/packedbits/packedbits/_codeql_build_dir/apps/unittest [==[--gtest_filter=BitSetTest.BitwiseAND]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[BitSetTest.BitwiseAND]=]  PROPERTIES WORKING_DIRECTORY /home/runner/work/packedbits/packedbits/_codeql_build_dir/apps SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==])
+set(  unittest_TESTS BitSetTest.BasicOperations BitSetTest.BitwiseAND)

@@ -1,0 +1,5 @@
+if(EXISTS "/home/runner/work/packedbits/packedbits/_codeql_build_dir/apps/unittest[1]_tests.cmake")
+  include("/home/runner/work/packedbits/packedbits/_codeql_build_dir/apps/unittest[1]_tests.cmake")
+else()
+  add_test(unittest_NOT_BUILT unittest_NOT_BUILT)
+endif()
