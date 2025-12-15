@@ -16,6 +16,9 @@ public:
           n(vec.size()),
           data()
     {
+        // Reserve space to avoid reallocations
+        data.reserve(vec.size() / 4 + 2);
+        
         size_t i = 0;
 
         while (i < vec.size()) {
@@ -33,10 +36,13 @@ public:
     }
 
     PackedBitChain(const PackedBitChain& a, const PackedBitChain& b)
-        : n(a.n),
+        : sum(0),
+          n(a.n),
           data()
     {
         if (a.n > 0) {
+            // Reserve space to avoid reallocations
+            data.reserve(a.data.size() + b.data.size());
             data.push_back(0);
             Iter iter1(&a);
             Iter iter2(&b);
@@ -127,16 +133,16 @@ private:
             : chain(theChain), index(0), offset(0)
         { }
 
-        bool hasData() const
+        inline bool hasData() const
         { return index < chain->data.size(); }
 
-        bool currentValue() const
+        inline bool currentValue() const
         { return index % 2; }
 
-        size_t remainingCount() const
+        inline size_t remainingCount() const
         { return chain->data[index] - offset; }
 
-        void increment(size_t count)
+        inline void increment(size_t count)
         {
             offset += count;
             if (offset >= chain->data[index]) {
@@ -146,19 +152,20 @@ private:
         }
     };
 
-    float sum;
+    size_t sum;
     size_t n;
     std::vector<size_t> data;
 
-    bool getValue(const size_t index) const
+    inline bool getValue(const size_t index) const
     {
         size_t i = 0;
         size_t pos = 0;
         for (; i < data.size(); ++i) {
-            if (index < pos + data[i]) {
+            size_t next_pos = pos + data[i];
+            if (index < next_pos) {
                 break;
             }
-            pos += data[i];
+            pos = next_pos;
         }
 
         return i % 2;
