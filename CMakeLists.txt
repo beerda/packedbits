@@ -22,6 +22,8 @@ FetchContent_MakeAvailable(
     googletest
     googlebenchmark)
 
+find_package(Boost REQUIRED)
+
 enable_testing()
 
 add_subdirectory(src)
