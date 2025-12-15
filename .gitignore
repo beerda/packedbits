@@ -35,3 +35,4 @@
 *.user
 build/
 .history/
+_codeql_build_dir/
