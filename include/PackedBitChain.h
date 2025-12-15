@@ -16,6 +16,10 @@ public:
           n(vec.size()),
           data()
     {
+        // Reserve space to avoid reallocations
+        // Heuristic: assume average run length of 4, plus 2 for edge cases
+        data.reserve(vec.size() / 4 + 2);
+        
         size_t i = 0;
 
         while (i < vec.size()) {
@@ -33,13 +37,17 @@ public:
     }
 
     PackedBitChain(const PackedBitChain& a, const PackedBitChain& b)
-        : n(a.n),
+        : sum(0),
+          n(a.n),
           data()
     {
         if (a.n > 0) {
+            // Reserve space to avoid reallocations
+            data.reserve(a.data.size() + b.data.size());
             data.push_back(0);
             Iter iter1(&a);
             Iter iter2(&b);
+            bool current_bit = false;  // Track current bit to avoid data.size() % 2
 
             while (iter1.hasData() && iter2.hasData()) {
                 // iter1 is always the chain with greater number in current data
@@ -47,14 +55,13 @@ public:
                     std::swap(iter1, iter2);
                 }
 
-                bool value1 = iter1.currentValue();
-                bool value2 = iter2.currentValue();
-                bool res = value1 && value2;
+                bool res = iter1.currentValue() && iter2.currentValue();
                 size_t take = iter2.remainingCount();
 
-                if (res == (data.size() % 2)) {
+                if (res == current_bit) {
                     // no match (because data already contains current count)
                     data.push_back(take);
+                    current_bit = !current_bit;
                 } else {
                     // match - extend current count
                     data.back() += take;
@@ -78,10 +85,10 @@ public:
     PackedBitChain(PackedBitChain&& other) = default;
     PackedBitChain& operator=(PackedBitChain&& other) = default;
 
-    bool operator[](size_t index) const
+    inline bool operator[](size_t index) const
     {  return getValue(index); }
 
-    bool at(size_t index) const
+    inline bool at(size_t index) const
     {
         if (index >= n) {
             throw std::out_of_range("PackedBitChain::at");
@@ -90,10 +97,10 @@ public:
         return getValue(index);
     }
 
-    size_t size() const
+    inline size_t size() const
     { return n; }
 
-    bool empty() const
+    inline bool empty() const
     { return data.empty(); }
 
     const std::vector<size_t>& raw() const
@@ -127,16 +134,16 @@ private:
             : chain(theChain), index(0), offset(0)
         { }
 
-        bool hasData() const
+        inline bool hasData() const
         { return index < chain->data.size(); }
 
-        bool currentValue() const
-        { return index % 2; }
+        inline bool currentValue() const
+        { return index & 1; }  // Use bitwise AND instead of modulo
 
-        size_t remainingCount() const
+        inline size_t remainingCount() const
         { return chain->data[index] - offset; }
 
-        void increment(size_t count)
+        inline void increment(size_t count)
         {
             offset += count;
             if (offset >= chain->data[index]) {
@@ -146,21 +153,22 @@ private:
         }
     };
 
-    float sum;
+    size_t sum;
     size_t n;
     std::vector<size_t> data;
 
-    bool getValue(const size_t index) const
+    inline bool getValue(const size_t index) const
     {
         size_t i = 0;
         size_t pos = 0;
         for (; i < data.size(); ++i) {
-            if (index < pos + data[i]) {
+            size_t next_pos = pos + data[i];
+            if (index < next_pos) {
                 break;
             }
-            pos += data[i];
+            pos = next_pos;
         }
 
-        return i % 2;
+        return i & 1;  // Use bitwise AND instead of modulo
     }
 };
