@@ -1,1 +1,0 @@
-/home/runner/work/packedbits/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/packedbits.dir/link.d CMakeFiles/packedbits.dir/main.cpp.o -o packedbits  ../_deps/googlebenchmark-build/src/libbenchmark.a -lrt
