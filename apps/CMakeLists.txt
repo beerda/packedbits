@@ -3,7 +3,7 @@ add_compile_options(
 )
 
 add_executable(packedbits main.cpp)
-target_link_libraries(packedbits PRIVATE packedbits_lib benchmark::benchmark)
+target_link_libraries(packedbits PRIVATE packedbits_lib benchmark::benchmark Boost::headers)
 
 add_executable(unittest
     unittest_dummy.cpp
