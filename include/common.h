@@ -2,6 +2,10 @@
 
 #include <cstdint>
 #include <vector>
+#include <stdexcept>
+#include <sstream>
+#include <string>
+#include <iostream>
 
 // Common definitions for packedbits
 

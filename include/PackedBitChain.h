@@ -12,10 +12,11 @@ public:
     { }
 
     PackedBitChain(std::vector<bool>& vec)
-        : n(vec.size()),
+        : sum(0),
+          n(vec.size()),
           data()
     {
-        R_xlen_t i = 0;
+        size_t i = 0;
 
         while (i < vec.size()) {
             bool cur = data.size() % 2;
@@ -77,12 +78,6 @@ public:
     PackedBitChain(PackedBitChain&& other) = default;
     PackedBitChain& operator=(PackedBitChain&& other) = default;
 
-    bool operator==(const PackedBitChain& other) const
-    { return BaseChain::operator==(other) && (data == other.data); }
-
-    bool operator!=(const PackedBitChain& other) const
-    { return !(*this == other); }
-
     bool operator[](size_t index) const
     {  return getValue(index); }
 
@@ -101,13 +96,13 @@ public:
     bool empty() const
     { return data.empty(); }
 
-    const vector<size_t>& raw() const
+    const std::vector<size_t>& raw() const
     { return data; }
 
-    string toString() const
+    std::string toString() const
     {
         Iter iter(this);
-        stringstream res;
+        std::stringstream res;
         res << "[n=" << n << "]";
         while (iter.hasData()) {
             bool cur = iter.currentValue();
@@ -151,6 +146,7 @@ private:
         }
     };
 
+    float sum;
     size_t n;
     std::vector<size_t> data;
 
