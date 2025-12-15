@@ -17,6 +17,7 @@ public:
           data()
     {
         // Reserve space to avoid reallocations
+        // Heuristic: assume average run length of 4, plus 2 for edge cases
         data.reserve(vec.size() / 4 + 2);
         
         size_t i = 0;
