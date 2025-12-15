@@ -46,6 +46,7 @@ public:
             data.push_back(0);
             Iter iter1(&a);
             Iter iter2(&b);
+            bool current_bit = false;  // Track current bit to avoid data.size() % 2
 
             while (iter1.hasData() && iter2.hasData()) {
                 // iter1 is always the chain with greater number in current data
@@ -53,14 +54,13 @@ public:
                     std::swap(iter1, iter2);
                 }
 
-                bool value1 = iter1.currentValue();
-                bool value2 = iter2.currentValue();
-                bool res = value1 && value2;
+                bool res = iter1.currentValue() && iter2.currentValue();
                 size_t take = iter2.remainingCount();
 
-                if (res == (data.size() % 2)) {
+                if (res == current_bit) {
                     // no match (because data already contains current count)
                     data.push_back(take);
+                    current_bit = !current_bit;
                 } else {
                     // match - extend current count
                     data.back() += take;
@@ -84,10 +84,10 @@ public:
     PackedBitChain(PackedBitChain&& other) = default;
     PackedBitChain& operator=(PackedBitChain&& other) = default;
 
-    bool operator[](size_t index) const
+    inline bool operator[](size_t index) const
     {  return getValue(index); }
 
-    bool at(size_t index) const
+    inline bool at(size_t index) const
     {
         if (index >= n) {
             throw std::out_of_range("PackedBitChain::at");
@@ -96,10 +96,10 @@ public:
         return getValue(index);
     }
 
-    size_t size() const
+    inline size_t size() const
     { return n; }
 
-    bool empty() const
+    inline bool empty() const
     { return data.empty(); }
 
     const std::vector<size_t>& raw() const
@@ -137,7 +137,7 @@ private:
         { return index < chain->data.size(); }
 
         inline bool currentValue() const
-        { return index % 2; }
+        { return index & 1; }  // Use bitwise AND instead of modulo
 
         inline size_t remainingCount() const
         { return chain->data[index] - offset; }
@@ -168,6 +168,6 @@ private:
             pos = next_pos;
         }
 
-        return i % 2;
+        return i & 1;  // Use bitwise AND instead of modulo
     }
 };
